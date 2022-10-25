@@ -1,0 +1,80 @@
+application:
+  title: "TradeX : Trading Made Easy"
+  version: 1.0
+
+app:
+#  # For AP
+#  topology-keys: aws.ap-southeast-1.ap-southeast-1c
+#  initial-ysql-host: 127.0.0.3
+#  region: AP
+  security:
+#    jwt:
+#      secret: cccccclvkgnllrhrngucjbivrehvjcnkfvfihildhfcg
+#      expiry: 86400
+  cors:
+    allowed_origins: http://localhost:3000/
+    max_age: 3600
+
+spring:
+  application:
+    name: trading-api
+#  flyway:
+#    baseline-on-migrate: true
+#    default-schema: public
+#    schemas: public
+#  jpa:
+#    hibernate:
+#      ddl-auto: validate
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+#        connection:
+#          provider_disables_autocommit: true
+#        default_schema: public
+#    open-in-view: false
+  datasource:
+    driver-class-name: com.yugabyte.Driver
+    username: ${APP_DB_USER}
+    password: ${APP_DB_PWD}
+    url: jdbc:yugabytedb://${APP_DB_HOST}:5433/${APP_DB_NAME}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: false
+      keepalive-time: 120000
+      connection-init-sql: "set search_path=public; "
+      connection-test-query: "select * from flyway_schema_history fsh;"
+      validation-timeout: 120000
+
+  data:
+    rest:
+      base-path: /api/v1
+  devtools:
+    livereload:
+      port: 35730
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    #    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org:
+      springframework:
+        security: DEBUG
+    web: debug
+    sql: debug
+
+    com:
+      zaxxer:
+        hikari: warn

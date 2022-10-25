@@ -1,0 +1,43 @@
+version: '3'
+services:
+  yugabyte:
+    container_name: my-db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    image: yugabytedb/yugabyte:2.15.2.1-b1
+    command: |
+      bash -c "
+      # create database and user as soon as database is up
+      until [ -z "POSTGRES_USER" ] || PGPASSWORD=yugabyte bin/ysqlsh -v ON_ERROR_STOP=1 \\
+      -c \"create database $${POSTGRES_DB:-$${POSTGRES_USER}} \" \\
+      -c \"create user $${POSTGRES_USER} password '$${POSTGRES_PASSWORD}' \" \\
+      2>/dev/null
+      do
+       echo \"Waiting for YugabyteDB to be up for creating user $${POSTGRES_USER}.\" ; sleep 5
+      done &
+      # start YugabyteDB
+      bin/yugabyted start --daemon=false --tserver_flags='ysql_enable_auth=true'
+      "
+    ports:
+      - '7000:7000'
+      - '9000:9000'
+      - '5433:5433'
+      - '9042:9042'
+  flyway:
+    container_name: tradex-flyway
+    environment:
+      - FLYWAY_USER=${POSTGRES_USER}
+      - FLYWAY_PASSWORD=${POSTGRES_PASSWORD}
+      - FLYWAY_URL=jdbc:postgresql://yugabyte:5433/tradex
+      - FLYWAY_SCHEMA=public
+    image: flyway/flyway:latest
+    links:
+      - yugabyte
+    depends_on:
+      - yugabyte
+    command: -locations=filesystem:/flyway/sql -connectRetries=60 migrate
+
+    volumes:
+      - ./migrations:/flyway/sql
