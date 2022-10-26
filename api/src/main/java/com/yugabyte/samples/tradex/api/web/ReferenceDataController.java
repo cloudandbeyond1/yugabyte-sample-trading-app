@@ -23,15 +23,14 @@ public class ReferenceDataController {
     return refDataService.getTrafficLocations();
   }
 
-  @GetMapping("/api/refdata/dbcluster")
-  public List<DBClusterInfo> getDBClusters() throws ApplicationServiceException {
-    return refDataService.getDbClusters();
+  @GetMapping("/api/refdata/dbtypes")
+  public List<DBClusterInfo> getDBTypes() throws ApplicationServiceException {
+    return refDataService.getDbClusterTypes();
   }
 
   @GetMapping("/api/refdata/symbols")
   public List<StockSymbol> getStockSymbols() throws ApplicationServiceException {
     return refDataService.getStockSymbols();
   }
-
 
 }

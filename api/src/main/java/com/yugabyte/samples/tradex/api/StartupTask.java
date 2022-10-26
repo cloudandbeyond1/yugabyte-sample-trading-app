@@ -17,5 +17,7 @@ public class StartupTask implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
     log.info("Application started. Number of REF_DATA entries: " + jdbcTemplate.queryForObject(CHECK_SQL, Integer.class));
+
+
   }
 }

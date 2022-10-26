@@ -7,13 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.yugabyte.samples.tradex.api.model.DBClusterInfo;
+import com.yugabyte.samples.tradex.api.model.RefDatum;
 import com.yugabyte.samples.tradex.api.model.StockSymbol;
 import com.yugabyte.samples.tradex.api.model.TrafficLocation;
-import com.yugabyte.samples.tradex.model.Tables;
+import com.yugabyte.samples.tradex.api.repo.RefDatumRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.jooq.DSLContext;
-import org.jooq.JSON;
-import org.jooq.Record1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,16 +23,20 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class RefDataService {
 
-  @Autowired
-  DSLContext dbContext;
-
   ObjectMapper mapper = new ObjectMapper();
+
+  RefDatumRepository refDatumRepository;
+
+  @Autowired
+  public RefDataService(RefDatumRepository refDatumRepository) {
+    this.refDatumRepository = refDatumRepository;
+  }
 
   public List<TrafficLocation> getTrafficLocations() throws ApplicationServiceException {
     return fetchRefDataAsList("trafficlocations", TrafficLocation.class);
   }
 
-  public List<DBClusterInfo> getDbClusters() throws ApplicationServiceException {
+  public List<DBClusterInfo> getDbClusterTypes() throws ApplicationServiceException {
     return fetchRefDataAsList("DBClustersTypes", DBClusterInfo.class);
   }
 
@@ -43,17 +45,16 @@ public class RefDataService {
   }
 
   private List fetchRefDataAsList(String keyname, Class targetType) throws ApplicationServiceException {
-    Record1<JSON> trafficLocations = dbContext.select(Tables.REF_DATA.KEY_VALUE).from(Tables.REF_DATA).where(Tables.REF_DATA.KEY_NAME.eq(keyname)).fetchOne();
     try {
-      ObjectNode node = mapper.readValue(trafficLocations.get(0).toString(), ObjectNode.class);
+      RefDatum refData = refDatumRepository.findByKeyName(keyname);
+      ObjectNode node = mapper.readValue(refData.getKeyValue().toString(), ObjectNode.class);
       JsonNode locations = node.get(keyname);
       TypeFactory typeFactory = mapper.getTypeFactory();
       return mapper.treeToValue(locations, typeFactory.constructCollectionType(List.class, targetType));
     } catch (JsonProcessingException e) {
       log.error("Failed parsing refdata: {}", e.getMessage());
+      throw new ApplicationServiceException("Failed to fetch reference data: " + keyname);
     }
 
-    throw new ApplicationServiceException("Failed to fetch reference data: " + keyname);
   }
-
 }
