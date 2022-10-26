@@ -6,10 +6,10 @@ import java.util.Calendar;
 
 public class DateUtils {
 
-  public static final SimpleDateFormat DF_YYYYMMDD = new SimpleDateFormat("yyyyMMdd");
+  public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
   public static Calendar fromYYYMMDD(String input) throws ParseException {
     Calendar calendar = Calendar.getInstance();
-    calendar.setTime(DF_YYYYMMDD.parse(input));
+    calendar.setTime(sdf.parse(input));
     return calendar;
   }
 }

@@ -1,0 +1,12 @@
+#export APP_DB_HOST=localhost
+#export APP_DB_NAME=tradex
+#export APP_DB_USER=developer
+#export APP_DB_PWD=tester
+
+export APP_DB_USER=yugabyte
+export APP_DB_PWD=@tradeX!23GCP!23
+export APP_DB_NAME=yugabyte
+export APP_DB_HOST=52.91.210.5
+
+
+APP_DB_USER=yugabyte;APP_DB_PWD=@tradeX!23GCP!23;APP_DB_NAME=yugabyte;APP_DB_HOST=52.91.210.5

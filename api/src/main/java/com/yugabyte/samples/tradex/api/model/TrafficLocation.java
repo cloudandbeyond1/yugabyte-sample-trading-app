@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TrafficLocation {
+  int id;
   String name;
   String country;
   String latitude;

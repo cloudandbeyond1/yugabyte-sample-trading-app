@@ -30,13 +30,13 @@ services:
     environment:
       - FLYWAY_USER=${POSTGRES_USER}
       - FLYWAY_PASSWORD=${POSTGRES_PASSWORD}
-      - FLYWAY_URL=jdbc:postgresql://yugabyte:5433/tradex
+      - FLYWAY_URL=jdbc:postgresql://${POSTGRES_HOST}:5433/${POSTGRES_DB}
       - FLYWAY_SCHEMA=public
     image: flyway/flyway:latest
-    links:
-      - yugabyte
-    depends_on:
-      - yugabyte
+#    links:
+#      - yugabyte
+#    depends_on:
+#      - yugabyte
     command: -locations=filesystem:/flyway/sql -connectRetries=60 migrate
 
     volumes:

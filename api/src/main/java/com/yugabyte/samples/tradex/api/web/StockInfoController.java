@@ -1,7 +1,7 @@
 package com.yugabyte.samples.tradex.api.web;
 
 import com.yugabyte.samples.tradex.api.service.StockInfoService;
-import com.yugabyte.samples.tradex.api.utils.DateUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import yahoofinance.Stock;
 import yahoofinance.histquotes.Interval;
 
-import java.text.ParseException;
-
 @RestController
 public class StockInfoController {
 
@@ -20,6 +18,7 @@ public class StockInfoController {
   StockInfoService stockInfoService;
 
   @GetMapping("/api/stocks/{symbol}")
+  @Operation(summary = "Fetch Stock Info from yahoo")
   public Stock fetchSingleStock(@PathVariable("symbol") String symbol,
                                 @RequestParam(name = "hist", required = false, defaultValue = "N") boolean includeHist,
                                 @RequestParam(name = "from", required = false) String fromDate,

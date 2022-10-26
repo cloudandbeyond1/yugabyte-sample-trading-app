@@ -3,30 +3,35 @@ truncate TABLE REF_DATA;
 INSERT INTO REF_DATA(KEY_NAME, KEY_VALUE) VALUES ('trafficlocations',
 '{"trafficlocations":[
  {
+  "id": 1,
   "name":"Los Angeles",
   "country":"United States",
   "latitude":"34.052",
   "longitude": "-118.243"
  },
  {
+  "id": 2,
   "name":"Washington",
   "country":"United States",
   "latitude":"47.751",
   "longitude": "-120.740"
  },
 {
+  "id": 3,
   "name":"London",
   "country":"United Kingdom",
   "latitude":"51.509",
   "longitude": "-0.118"
  },
 {
+  "id": 4,
   "name":"Mumbai",
   "country":"India",
   "latitude":"19.076",
   "longitude": "72.877"
  },
 {
+  "id": 5,
   "name":"Sydney",
   "country":"Australia",
   "latitude":"-33.865",

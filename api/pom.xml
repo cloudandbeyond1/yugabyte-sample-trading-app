@@ -6,7 +6,6 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.7.5</version>
-    <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.yugabyte.samples</groupId>
   <artifactId>tradex-api</artifactId>
@@ -113,9 +112,9 @@
                   <!--Insert your DB configuration-->
                   <jdbc>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://localhost:5433/tradex</url>
-                    <user>developer</user>
-                    <password>tester</password>
+                    <url>jdbc:postgresql://${APP_DB_HOST}:5433/${APP_DB_NAME}</url>
+                    <user>${APP_DB_USER}</user>
+                    <password>${APP_DB_PWD}</password>
                   </jdbc>
                   <generator>
                     <database>
